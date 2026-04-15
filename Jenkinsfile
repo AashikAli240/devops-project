@@ -2,17 +2,10 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "aashikali240/devops-demo"   // <-- Replace with your DockerHub username
-        GIT_REPO = "https://github.com/AashikAli240/devops-project.git"
+        DOCKER_IMAGE = "aashikali240/devops-demo"
     }
 
     stages {
-
-        stage('Clone Repository') {
-            steps {
-                git "${GIT_REPO}"
-            }
-        }
 
         stage('Build Docker Image') {
             steps {
@@ -49,3 +42,4 @@ pipeline {
         }
     }
 }
+
