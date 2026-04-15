@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+env/
+venv/
+
+# Environment files
+.env
+*.env.local
+*.secret
+secrets/
+
+# Docker
+*.log
+docker-data/
+docker-compose.override.yml
+
+# Node (if frontend exists)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# AWS / Credentials
+.aws/
+*.pem
+*.key
+*.crt
+
+# Terraform (if you add later)
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+crash.log
+
+# Kubernetes
+*.yaml~
+*.yml~
+k8s/*.backup
+
+# Jenkins
+workspace/
+*.tmp
+
