@@ -2,42 +2,47 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "aashikali240/devops-demo"
+        IMAGE_NAME = "devops-project"
+        TAG = "v1"
+        DOCKERHUB_REPO = "aashikali240/devops-demo"
+        CONTAINER_NAME = "devops-app"
     }
 
     stages {
 
+        stage('Checkout SCM') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/AashikAli240/devops-project.git'
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
-                sh '''
-                    echo "Building Docker Image..."
-                    docker build -t $DOCKER_IMAGE:latest .
-                '''
+                script {
+                    sh "docker build -t ${IMAGE_NAME}:${TAG} ."
+                }
             }
         }
 
         stage('Push to Docker Hub') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-cred',
-                    usernameVariable: 'USER',
-                    passwordVariable: 'PASS'
-                )]) {
-
-                    sh '''
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                    sh """
                         echo "$PASS" | docker login -u "$USER" --password-stdin
-                        docker push $DOCKER_IMAGE:latest
-                    '''
+                        docker tag ${IMAGE_NAME}:${TAG} ${DOCKERHUB_REPO}:${TAG}
+                        docker push ${DOCKERHUB_REPO}:${TAG}
+                    """
                 }
             }
         }
 
-        stage('Deploy to Kubernetes') {
+        stage('Run Container') {
             steps {
-                sh '''
-                    echo "Deploying to Kubernetes..."
-                    kubectl apply -f k8s/
-                '''
+                script {
+                    sh "docker rm -f ${CONTAINER_NAME} || true"
+                    sh "docker run -d --name ${CONTAINER_NAME} -p 8081:80 ${IMAGE_NAME}:${TAG}"
+                }
             }
         }
     }
