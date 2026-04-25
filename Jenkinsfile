@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    triggers {
+        pollSCM('* * * * *')   // Auto build every 1 minute
+    }
+
     environment {
         IMAGE_NAME = "devops-project"
         TAG = "v1"
